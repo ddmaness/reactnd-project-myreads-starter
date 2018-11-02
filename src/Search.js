@@ -7,7 +7,7 @@ import Book from './Book'
 class Search extends React.Component {
   constructor(props){
 		super(props);
-    
+
     this.state = {
   		query: '',
 	    results: [],
@@ -20,13 +20,14 @@ class Search extends React.Component {
   }
   
 	render() {
+    const onChange = this.props.onChange;
     let bookList;
-    if (this.state.results.length > 0) {
+    if (this.state.results && this.state.results.length > 0) {
       bookList = this.state.results.map(function(elem) {
       	return (
           <Book
             book = {elem}
-            onChange = {this.props.onChange}
+            onChange = {onChange}
             key = {elem.id}
           />
         )
