@@ -20,16 +20,16 @@ class BooksApp extends React.Component {
       read: [],
     }
     this.addBook = this.addBook.bind(this);
+    this.updateLibrary = this.updateLibrary.bind(this);
   }
   
   updateLibrary(books) {
     const currentlyReading = [];
     const wantToRead = [];
     const read = [];
-    console.log(books);
     books.forEach(function(elem) {
         console.log(elem);
-        if (elem.shelf === 'test') {
+        if (elem.shelf === 'currentlyReading') {
           currentlyReading.push(elem);
         }
         else if (elem.shelf === 'wantToRead') {

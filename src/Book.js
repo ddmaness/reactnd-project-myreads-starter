@@ -9,7 +9,8 @@ function Book(props) {
 						<div className="book-shelf-changer">
 							<select onChange={function(event){props.onChange(props.book, event)}}>
 								<option value="move" disabled>Move to...</option>
-								<option value="test">Currently Reading</option>
+								<option hidden value='' defaultValue>dummy option for onChange workaround</option>
+								<option value="currentlyReading">Currently Reading</option>
 								<option value="wantToRead">Want to Read</option>
 								<option value="read">Read</option>
 								<option value="none">None</option>
