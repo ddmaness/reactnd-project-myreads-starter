@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
+// Component for searching for books in the API
 class Search extends React.Component {
   constructor(props){
 		super(props);
@@ -11,29 +12,47 @@ class Search extends React.Component {
   		query: '',
 	    results: [],
   	}
+    this.updateQuery = this.updateQuery.bind(this);
   }
   
+  // Updates query based on user input
 	updateQuery(query) {
     this.setState({query: query})
     BooksAPI.search(query, 20).then(response => this.setState({results: response})).catch(() => this.setState({results: []}));
   }
   
 	render() {
+    const library = this.props.bookList;
     const onChange = this.props.onChange;
     let bookList;
+    
+    // Ensures that the appropriate shelf is marked in search results
     if (this.state.results && this.state.results.length > 0) {
       bookList = this.state.results.map(function(elem) {
+        let book;
+        for (let i = 0; i < library.length; i++) {
+          if (library[i].id === elem.id) {
+            book = library[i];
+            break;
+          }
+          else if (i === library.length - 1) {
+            book = elem;
+          }
+        }
       	return (
           <Book
-            book = {elem}
+            book = {book}
             onChange = {onChange}
-            key = {elem.id}
+            key = {book.id}
           />
         )
       })
     }
+    else if (this.state.query === '') {
+      bookList = <li>Search for Books</li>
+    }
     else {
-      bookList = <li>"No Results!"</li>
+      bookList = <li>No Matches Found</li>
     }
 
     return( 

@@ -10,12 +10,7 @@ class BooksApp extends React.Component {
   constructor(){
     super();
     this.state = {
-      /**
-      * TODO: Instead of using this state variable to keep track of which page
-      * we're on, use the URL in the browser's address bar. This will ensure that
-      * users can use the browser's back and forward buttons to navigate between
-      * pages, as well as provide a good URL they can bookmark and share.
-      */
+      bookList: [],
       currentlyReading: [],
       wantToRead: [],
       read: [],
@@ -24,37 +19,40 @@ class BooksApp extends React.Component {
     this.updateLibrary = this.updateLibrary.bind(this);
   }
   
+  // Places books on correct shelf based on their 'shelf' property
   updateLibrary(books) {
+    const bookList = [];
     const currentlyReading = [];
     const wantToRead = [];
     const read = [];
     books.forEach(function(elem) {
-        console.log(elem);
-        if (elem.shelf === 'currentlyReading') {
-          currentlyReading.push(elem);
-        }
-        else if (elem.shelf === 'wantToRead') {
-          wantToRead.push(elem);
-        }
-        else if (elem.shelf === 'read') {
-          read.push(elem);
-        }
-      })
+      bookList.push(elem);
+      if (elem.shelf === 'currentlyReading') {
+        currentlyReading.push(elem);
+      }
+      else if (elem.shelf === 'wantToRead') {
+        wantToRead.push(elem);
+      }
+      else if (elem.shelf === 'read') {
+        read.push(elem);
+      }
+    })
     this.setState({
+      bookList: bookList,
       currentlyReading: currentlyReading,
       wantToRead: wantToRead,
       read: read,
     })
   }
 
-
-
+  // API call for all books currently on a shelf
   componentDidMount() {
     BooksAPI.getAll().then(books => {
       this.updateLibrary(books)
     }) 
   }
 
+  // API call to add or move book from one shelf to another
   addBook(book, event){
     if (event.target.value) {
       BooksAPI.update(book, event.target.value).then(BooksAPI.getAll).then(books => {
@@ -69,8 +67,9 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route path="/search" render={() => (
-          <Search 
-            onChange={this.addBook}
+          <Search
+            bookList = {this.state.bookList}
+            onChange = {this.addBook}
           />
         )}/>
 
